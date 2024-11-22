@@ -15,7 +15,7 @@ phases:
   build:
     commands:
       - echo "Building Docker image..."
-      - docker build -t $ECR_REPO .
+      - docker build -t $ECR_REPO ./analytics
       - docker tag $ECR_REPO:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$CODEBUILD_BUILD_NUMBER
 
   post_build:
