@@ -11,7 +11,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: <NAME OF THE Secret>
+  name: db-secret
 type: Opaque
 data:
   DB_PASSWORD: bXlwYXNzd29yZA==
