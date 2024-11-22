@@ -1,0 +1,29 @@
+version: 0.2
+
+env:
+  variables:
+    ECR_REPOSITORY_URI: 145974184549.dkr.ecr.us-east-1.amazonaws.com/coworking-app
+    AWS_REGION: us-east-1
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+      - echo Preparing to build the Docker image...
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t coworking-app .
+      - echo Tagging the Docker image...
+      - docker tag coworking-app:latest $ECR_REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+  post_build:
+    commands:
+      - echo Pushing the Docker image to Amazon ECR...
+      - docker push $ECR_REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+      - echo Build completed successfully!
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
