@@ -1,15 +1,19 @@
 version: 0.2
 
-env:
-  variables:
-    AWS_ACCOUNT_ID: 123456789012
-    AWS_REGION: us-east-1
-    ECR_REPO: coworking-app
-
 phases:
+  install:
+    commands:
+      - echo "Installing jq for JSON parsing"
+      - yum install -y jq
+
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR..."
+      - echo "Retrieving Docker Hub credentials from Secrets Manager..."
+      - DOCKER_USERNAME=$(aws secretsmanager get-secret-value --secret-id DockerHubCredentials --query 'SecretString' --output text | jq -r .username)
+      - DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id DockerHubCredentials --query 'SecretString' --output text | jq -r .password)
+      - echo "Logging into Docker Hub..."
+      - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+      - echo "Logging into Amazon ECR..."
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
   build:
