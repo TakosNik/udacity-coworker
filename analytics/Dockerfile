@@ -25,4 +25,4 @@ ENV DB_PORT=5433
 ENV DB_NAME=mydatabase
 
 # Command to run the application
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
