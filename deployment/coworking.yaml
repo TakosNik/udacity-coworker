@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: coworking
+  name: auntk-prj3-kub
 spec:
   type: LoadBalancer
   selector:
-    service: coworking
+    app: coworking
   ports:
   - name: "5153"
     protocol: TCP
@@ -15,18 +15,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coworking
+  name: auntk-prj3-kub
   labels:
-    name: coworking
+    name: auntk-prj3-kub
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: coworking
+      app: coworking
   template:
     metadata:
       labels:
-        service: coworking
+        app: coworking
     spec:
       containers:
       - name: coworking
@@ -51,6 +51,6 @@ spec:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-secret
+              name: coworking
               key: DB_PASSWORD
       restartPolicy: Always
