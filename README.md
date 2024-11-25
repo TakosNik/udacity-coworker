@@ -7,7 +7,7 @@ For this project, you are a DevOps engineer who will be collaborating with a tea
 
 ### Dependencies
 #### Local Environment
-1. Python Environment - run Python 3.6+ applications and install Python dependencies via `pip`
+1. Python Environment - run Python 3.10+ applications and install Python dependencies via `pip`
 2. Docker CLI - build and run Docker images locally
 3. `kubectl` - run commands against a Kubernetes cluster
 4. `helm` - apply Helm Charts to a Kubernetes cluster
@@ -129,3 +129,24 @@ Please provide up to 3 sentences for each suggestion. Additional content in your
 ### Best Practices
 * Dockerfile uses an appropriate base image for the application being deployed. Complex commands in the Dockerfile include a comment describing what it is doing.
 * The Docker images use semantic versioning with three numbers separated by dots, e.g. `1.2.1` and  versioning is visible in the  screenshot. See [Semantic Versioning](https://semver.org/) for more details.
+
+### Solution
+
+1. Clone this repository
+
+2. Open a terminal and run the following commands
+
+3. aws configure -> add the IAM user's credentials
+
+4. create EKS cluster , apply the deployment files, start database service, fill the database
+
+5. Go to ECR and retrieve authentication token, example:
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 145974184549.dkr.ecr.us-east-1.amazonaws.com
+
+6. docker build -t udacity/coworkers .
+
+7. docker run --network="host" test-coworking-analytics
+
+8. docker tag udacity/coworkers:latest 145974184549.dkr.ecr.us-east-1.amazonaws.com/udacity/coworkers:latest
+
+9. docker push 145974184549.dkr.ecr.us-east-1.amazonaws.com/udacity/coworkers:latest
