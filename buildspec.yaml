@@ -6,17 +6,17 @@ env:
     AWS_REGION: us-east-1
     ECR_REPO: coworking-app
 
-phases:
-  pre_build:
-    commands:
-      - echo "Logging into Amazon ECR..."
+pre_build:
+  commands:
+      - echo "Retrieving Docker Hub credentials..."      - DOCKER_USERNAME=$(aws secretsmanager get-secret-value --secret-id DockerHubCredentials --query 'SecretString' --output text | jq -r .username)      - DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id DockerHubCredentials --query 'SecretString' --output text | jq -r .password)       
+      - echo "Logging into Docker Hub..."      - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin      - echo "Logging into Amazon ECR..."
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
-  build:
-    commands:
-      - echo "Building Docker image..."
-      - cd analytics
-      - docker build -t $ECR_REPO .
+build:
+  commands:
+      - echo "Building Docker image..."    
+      - cd analytics    
+      - docker build -t $ECR_REPO .    
       - docker tag $ECR_REPO:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$CODEBUILD_BUILD_NUMBER
 
   post_build:
